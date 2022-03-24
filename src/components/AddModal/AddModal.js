@@ -20,15 +20,46 @@ const InnerModalConatiner = styled.div`
     }
 `
 
+const ButtonContainer = styled.div`
+    margin-top: 30px;
+
+    button {
+        margin-left: 15px;
+        padding: 15px;
+        border: none;
+        cursor: pointer;
+    }
+`
+
 function AddModal(props) {
     const isModalOpen = useSelector((state) => state.todo.isModalOpen);
     const dispatch = useDispatch();
 
     const [todoTitle, setTodoTitle] = useState('');
+    const [todoContent, setTodoContent] = useState('');
 
     const onChangeTodoTitle = (e) => {
-        console.log(e);
         setTodoTitle(e.target.value);
+    }
+
+    const onChangeTodoContent = (e) => {
+        setTodoContent(e.target.value);
+    }
+
+    const addTodoDispatcher = (_data) => {
+        
+        if (todoTitle === '') {
+            return alert('TODO TITLE IS EMPTY')
+        }
+        
+        dispatch(ADD_TODO(_data));
+        modalToggleDispatcher();
+    }
+
+    const modalToggleDispatcher = () => {
+        setTodoTitle('');
+        setTodoContent('');
+        dispatch((MODAL_TOGGLE()))
     }
 
     return (
@@ -46,7 +77,7 @@ function AddModal(props) {
                     },
                     content: {
                       position: 'absolute',
-                      top: '40px',
+                      top: '80px',
                       left: '40px',
                       right: '40px',
                       bottom: '40px',
@@ -65,15 +96,17 @@ function AddModal(props) {
             {/* contents */}
 
             <InnerModalConatiner>
-            <div className="form__group field">
-                <input type="input" className="form__field" placeholder="Name" name="name" id='name' value={todoTitle} onChange={onChangeTodoTitle}/>
-                <label htmlFor="name" className="form__label">To-Do</label>
+                <div className="form__group field">
+                    <input type="input" className="form__field" placeholder="Name" name="name" id='name' value={todoTitle} onChange={onChangeTodoTitle}/>
+                    <label htmlFor="name" className="form__label">What To Do?</label>
 
-                <textarea placeholder='What To Do?' rows={15}/>
-            </div>
+                    <textarea placeholder='내용' rows={15} value={todoContent} onChange={onChangeTodoContent}/>
+                </div>
 
-                <button onClick={() => dispatch((ADD_TODO()))}>ADD TODO</button>
-                <button onClick={() => dispatch((MODAL_TOGGLE()))}>CLOSE</button>
+                <ButtonContainer>
+                    <button onClick={() => { addTodoDispatcher({ title: todoTitle, content: todoContent })} }>ADD TODO</button>
+                    <button onClick={() => { modalToggleDispatcher() }}>CLOSE</button>
+                </ButtonContainer>
 
             {/* contents */}
             </InnerModalConatiner>

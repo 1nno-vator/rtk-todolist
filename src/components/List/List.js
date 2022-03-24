@@ -14,6 +14,7 @@ function List() {
                         idx={v.idx}
                         title={v.title}
                         content={v.content}
+                        isDone={v.isDone}
                     />
             )
     )

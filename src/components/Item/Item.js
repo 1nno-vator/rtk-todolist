@@ -1,6 +1,8 @@
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components'
-import { DELETE_TODO } from '../../feature/todolist';
+import { DELETE_TODO, DONE_TASK } from '../../feature/todolist';
+
+import { MdUndo, MdOutlineFileDownloadDone, MdDelete } from 'react-icons/md'
 
 const ItemContainer = styled.div`
     display: flex;
@@ -14,19 +16,15 @@ const ItemContainer = styled.div`
 `
 
 const ItemTitle = styled.div`
-    flex-grow: 8;
+    width: 75%;
     text-align: center;
     cursor: pointer;
+    text-decoration: ${ ({ isDone }) => isDone ? 'line-through' : null }
 `
 
 const ItemButton = styled.div`
-    flex-grow: 1;
+    width: 15%;
     cursor: pointer;
-
-    button {
-        width: 80%;
-        cursor: pointer;
-    }
 `
 
 function Item(props) {
@@ -35,9 +33,27 @@ function Item(props) {
 
     return (
         <ItemContainer>
-            <ItemTitle onClick={() => alert(props.content)}>{props.title}</ItemTitle>
-            <ItemButton><button>DONE</button></ItemButton>
-            <ItemButton><button onClick={() => dispatch(DELETE_TODO(props.idx))}>DELETE</button></ItemButton>
+            <ItemTitle isDone={props.isDone} onClick={() => alert(props.content)}>{props.title}</ItemTitle>
+            <ItemButton>
+                {
+                    props.isDone 
+                        ?   <MdUndo 
+                                onClick={() => dispatch(DONE_TASK(props.idx))}
+                                style={ { fontSize: '26px', verticalAlign: 'middle' } }
+                            />
+                        :   <MdOutlineFileDownloadDone 
+                                onClick={() => dispatch(DONE_TASK(props.idx))}
+                                style={ { fontSize: '26px', verticalAlign: 'middle' } }
+                            />
+                }
+                
+            </ItemButton>
+            <ItemButton>
+                <MdDelete 
+                    onClick={() => dispatch(DELETE_TODO(props.idx))}
+                    style={ { fontSize: '26px', verticalAlign: 'middle' } }
+                />
+            </ItemButton>
         </ItemContainer>
     )
 }
